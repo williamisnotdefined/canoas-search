@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "GitHub.copilot",
+    "formulahendry.auto-close-tag",
+    "PKief.material-icon-theme",
+    "streetsidesoftware.code-spell-checker",
+    "kisstkondoros.vscode-codemetrics",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "forbeslindesay.vscode-sql-template-literal",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "EditorConfig.EditorConfig",
+    "christian-kohler.npm-intellisense",
+    "rangav.vscode-thunder-client",
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss"
+  ]
+}
