@@ -33,6 +33,7 @@ function findRowsByText(html: string, searchText: string): Data {
         const person = $(row)
           .find("td")
           .toArray()
+          .filter((cell) => $(cell).text().trim() !== "")
           .map((cell, index) => ({
             [`${getTableHead($, tableRows, index)}`]: $(cell).text(),
           }));
@@ -41,7 +42,6 @@ function findRowsByText(html: string, searchText: string): Data {
     });
   });
 
-  console.log("matchedRowHTML: ", matchedRowHTML);
   return matchedRowHTML;
 }
 
@@ -51,6 +51,7 @@ export async function GET(req: Request) {
     const searchParams = new URL(req.url).searchParams;
     const nameRaw = searchParams.get("name") || "";
     const name = nameRaw.trim().toLowerCase();
+    console.log("name:", name);
 
     if (name === "") {
       return new Response(
@@ -65,8 +66,6 @@ export async function GET(req: Request) {
     const html = await response.text();
 
     const data = findRowsByText(html, name);
-
-    console.log(`data: `, data);
 
     const result = data;
 
