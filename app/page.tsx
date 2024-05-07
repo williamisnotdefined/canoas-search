@@ -43,7 +43,7 @@ const IndexPage: React.FC = () => {
   return (
     <div>
       <div className="flex gap-2 flex-col max-w-[1000px] m-auto">
-        <h1 className="text-4xl font-bold text-gray-900">
+        <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Busca dos Abrigados em Canoas
         </h1>
 

@@ -37,13 +37,9 @@ function findRowsByText(html: string, searchText: string): Data {
         const person = $(row)
           .find("td")
           .toArray()
-          .filter((cell) => $(cell).text().trim() !== "")
           .map((cell, index) => {
             let cellText = $(cell).html();
-            // cellText
-            //   ?.replaceAll("\n", ", ")
-            //   .replaceAll("\r", ", ")
-            //   .replaceAll("<br>", ", ");
+
             let includesBr = cellText?.includes("<br>");
             if (includesBr) {
               cellText = (cellText as string)
@@ -59,7 +55,7 @@ function findRowsByText(html: string, searchText: string): Data {
             return {
               [`${getTableHead($, tableRows, index)}`]: includesBr
                 ? cellText
-                : $(cell).text(),
+                : $(cell).text() || " - ",
             };
           });
         matchedRowHTML.push([...person, { id: buttonText }]);
