@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 const DRIVE_URL =
   "https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#";
 
-type Data = { [x: string]: string }[][];
+type Data = { [x: string]: string | null | undefined }[][];
 
 const getTableHead = (
   $: CheerioAPI,
@@ -22,7 +22,7 @@ function findRowsByText(html: string, searchText: string): Data {
   const $ = load(html);
   const tables = $("table");
   let matchedRowHTML: {
-    [x: string]: string;
+    [x: string]: string | null | undefined;
   }[][] = [];
 
   tables.each((index, table) => {
@@ -33,14 +33,35 @@ function findRowsByText(html: string, searchText: string): Data {
 
     tableRows.each((index, row) => {
       const rowText = $(row).text().toLowerCase();
-      if (removeDiacritics(rowText).includes(searchText.toLowerCase())) {
+      if (removeDiacritics(rowText).includes(searchText)) {
         const person = $(row)
           .find("td")
           .toArray()
           .filter((cell) => $(cell).text().trim() !== "")
-          .map((cell, index) => ({
-            [`${getTableHead($, tableRows, index)}`]: $(cell).text(),
-          }));
+          .map((cell, index) => {
+            let cellText = $(cell).html();
+            // cellText
+            //   ?.replaceAll("\n", ", ")
+            //   .replaceAll("\r", ", ")
+            //   .replaceAll("<br>", ", ");
+            let includesBr = cellText?.includes("<br>");
+            if (includesBr) {
+              cellText = (cellText as string)
+                ?.split("<br>")
+                .filter((cell) =>
+                  removeDiacritics(cell)
+                    .toLocaleLowerCase()
+                    .includes(searchText)
+                )
+                .join(", ");
+            }
+
+            return {
+              [`${getTableHead($, tableRows, index)}`]: includesBr
+                ? cellText
+                : $(cell).text(),
+            };
+          });
         matchedRowHTML.push([...person, { id: buttonText }]);
       }
     });
