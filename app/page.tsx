@@ -113,7 +113,12 @@ const IndexPage: React.FC = () => {
         </button>
         {error && <div className="text-red-500">{error}</div>}
         {responseData?.data.length >= 0 && (
-          <p>{responseData?.data.length} resultado(s) encontrado(s).</p>
+          <p>
+            {responseData?.data.length} resultado(s) encontrado(s).{" "}
+            {responseData?.data.length === 0 && (
+              <span className="font-bold">Não perca as experanças!</span>
+            )}
+          </p>
         )}
       </div>
       {responseData?.data.map(
