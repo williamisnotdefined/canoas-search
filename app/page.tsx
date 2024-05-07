@@ -47,11 +47,24 @@ const IndexPage: React.FC = () => {
           Busca dos Abrigados em Canoas
         </h1>
 
-        <label htmlFor="nameInput">Nome da pessoa</label>
+        <p className="text-sm">
+          Esta aplicação tem como base de dados as planilhas do google drive dos
+          abrigados, criadas pelo tosalvocanoas, canoasmilgrau, etc.{" "}
+          <a
+            href="https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#"
+            target="_blank"
+            className="text-blue-500 hover:underline focus:outline-none focus:underline"
+          >
+            https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#
+          </a>
+        </p>
+
+        <label htmlFor="nameInput">Busque pelo nome da pessoa</label>
         <input
           id="name"
           type="text"
           value={name}
+          placeholder="Digite o nome da pessoa"
           onChange={handleInputChange}
           className="w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500"
         />
@@ -73,24 +86,28 @@ const IndexPage: React.FC = () => {
             return { ...result, ...currentObject };
           }, {});
 
-          const attrs = Object.keys(mergedPerson).map((key, index) => {
-            return (
-              <div
-                key={key + index}
-                className="flex bg-gray-100 text-gray-600 uppercase font-semibold py-2"
-              >
-                <div className="flex-1 px-4">{key}</div>
-                <div className="flex-1 px-4">{mergedPerson[key]}</div>
-              </div>
-            );
-          });
+          const tableId = mergedPerson.id;
+
+          const attrs = Object.keys(mergedPerson)
+            .filter((key) => key !== "id")
+            .map((key, index) => {
+              return (
+                <div
+                  key={key + index}
+                  className="flex bg-gray-100 text-gray-600 uppercase font-semibold py-2"
+                >
+                  <div className="flex-1 px-4">{key}</div>
+                  <div className="flex-1 px-4">{mergedPerson[key]}</div>
+                </div>
+              );
+            });
 
           return (
-            <div
-              key={__index}
-              className="bg-white px-6 py-4 max-w-[700px] m-auto"
-            >
-              <div className="flex flex-col">{attrs}</div>
+            <div className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto">
+              <p className="m-auto w-full font-medium text-2xl">{tableId}</p>
+              <div key={__index} className="bg-white py-4 m-auto w-full">
+                <div className="flex flex-col">{attrs}</div>
+              </div>
             </div>
           );
         }

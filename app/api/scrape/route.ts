@@ -27,6 +27,9 @@ function findRowsByText(html: string, searchText: string): Data {
 
   tables.each((index, table) => {
     const tableRows = $(table).find("tr");
+    const tableId = $(table).parent().parent().attr("id") || "";
+    const buttonId = `sheet-button-${tableId}`;
+    const buttonText = $(table).parents().find(`#${buttonId}`).text();
 
     tableRows.each((index, row) => {
       const rowText = $(row).text().toLowerCase();
@@ -38,7 +41,7 @@ function findRowsByText(html: string, searchText: string): Data {
           .map((cell, index) => ({
             [`${getTableHead($, tableRows, index)}`]: $(cell).text(),
           }));
-        matchedRowHTML.push(person);
+        matchedRowHTML.push([...person, { id: buttonText }]);
       }
     });
   });
