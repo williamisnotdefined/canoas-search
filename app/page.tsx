@@ -60,7 +60,7 @@ const IndexPage: React.FC = () => {
         </p>
         <p className="text-sm font-medium">
           ** Se você não achar pelo nome completo, tente pelo primeiro nome, ou
-          nome e apenas um sobrenome e veja procure nos resultados filtrados.
+          nome e apenas um sobrenome e procure nos resultados filtrados.
         </p>
 
         <p className="text-sm">
