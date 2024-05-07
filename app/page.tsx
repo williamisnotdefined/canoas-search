@@ -42,22 +42,30 @@ const IndexPage: React.FC = () => {
 
   return (
     <div>
-      <div className="flex gap-2 flex-col max-w-96 m-auto">
+      <div className="flex gap-2 flex-col max-w-[1000px] m-auto">
+        <h1 className="text-4xl font-bold text-gray-900">
+          Busca dos Abrigados em Canoas
+        </h1>
+
         <label htmlFor="nameInput">Nome da pessoa</label>
         <input
           id="name"
           type="text"
           value={name}
           onChange={handleInputChange}
+          className="w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500"
         />
         <button
-          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400"
+          className="max-w-36 grow-0 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
           onClick={fetchData}
           disabled={loading}
         >
           {loading ? "CARREGANDO..." : "Encontrar"}
         </button>
         {error && <div className="text-red-500">{error}</div>}
+        {responseData?.data.length > 0 && (
+          <p>{responseData?.data.length} resutlado(s) encontrado(s).</p>
+        )}
       </div>
       {responseData?.data.map(
         (person: { [x: string]: string }[], __index: number) => {

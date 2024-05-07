@@ -1,4 +1,5 @@
 import { load, Element, CheerioAPI, Cheerio } from "cheerio";
+import { remove as removeDiacritics } from "diacritics";
 import fetch from "node-fetch";
 
 const DRIVE_URL =
@@ -29,7 +30,7 @@ function findRowsByText(html: string, searchText: string): Data {
 
     tableRows.each((index, row) => {
       const rowText = $(row).text().toLowerCase();
-      if (rowText.includes(searchText.toLowerCase())) {
+      if (removeDiacritics(rowText).includes(searchText.toLowerCase())) {
         const person = $(row)
           .find("td")
           .toArray()
@@ -50,7 +51,7 @@ export async function GET(req: Request) {
   try {
     const searchParams = new URL(req.url).searchParams;
     const nameRaw = searchParams.get("name") || "";
-    const name = nameRaw.trim().toLowerCase();
+    const name = removeDiacritics(nameRaw.trim().toLowerCase());
     console.log("name:", name);
 
     if (name === "") {
