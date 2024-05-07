@@ -1,6 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { remove as removeDiacritics } from "diacritics";
+
+function highlightSubstring(fullString: string, pattern: string) {
+  fullString = removeDiacritics(fullString);
+  pattern = removeDiacritics(pattern);
+
+  if (!fullString.includes(pattern)) {
+    return fullString;
+  }
+  // Usamos expressão regular com a flag "i" para ignorar diferenciação de maiúsculas/minúsculas
+
+  const splitted = fullString.split(pattern);
+
+  return (
+    <>
+      <span>{splitted[0]}</span>
+      <span className="font-bold text-gray-800 bg-yellow-300">{pattern}</span>
+      <span>{splitted[1]}</span>
+    </>
+  );
+}
 
 const IndexPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -112,7 +133,12 @@ const IndexPage: React.FC = () => {
                   className="flex bg-gray-100 text-gray-600 uppercase font-semibold py-2"
                 >
                   <div className="flex-1 px-4">{key}</div>
-                  <div className="flex-1 px-4">{mergedPerson[key]}</div>
+                  <div className="flex-1 px-4">
+                    {highlightSubstring(
+                      mergedPerson[key].toLowerCase(),
+                      name.toLowerCase()
+                    )}
+                  </div>
                 </div>
               );
             });
