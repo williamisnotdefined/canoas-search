@@ -58,8 +58,8 @@ const IndexPage: React.FC = () => {
             https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#
           </a>
         </p>
-        <p className="text-sm">
-          Se você não achar pelo nome completo, tente pelo primeiro nome, ou
+        <p className="text-sm font-medium">
+          ** Se você não achar pelo nome completo, tente pelo primeiro nome, ou
           nome e apenas um sobrenome e veja procure nos resultados filtrados.
         </p>
 
