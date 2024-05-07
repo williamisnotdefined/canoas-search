@@ -41,7 +41,7 @@ const IndexPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="p-4">
       <div className="flex gap-2 flex-col max-w-[1000px] m-auto">
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Busca dos Abrigados em Canoas
@@ -56,6 +56,17 @@ const IndexPage: React.FC = () => {
             className="text-blue-500 hover:underline focus:outline-none focus:underline"
           >
             https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#
+          </a>
+        </p>
+
+        <p className="text-sm">
+          Compartilhe nos seus stories, marque os amigos, e ajude a divulgar!{" "}
+          <a
+            href="https://www.instagram.com/encontrados.canoas/"
+            className="text-blue-500 hover:underline focus:outline-none focus:underline"
+            target="_blank"
+          >
+            @encontrados.canoas
           </a>
         </p>
 
@@ -76,8 +87,8 @@ const IndexPage: React.FC = () => {
           {loading ? "CARREGANDO..." : "Encontrar"}
         </button>
         {error && <div className="text-red-500">{error}</div>}
-        {responseData?.data.length > 0 && (
-          <p>{responseData?.data.length} resutlado(s) encontrado(s).</p>
+        {responseData?.data.length >= 0 && (
+          <p>{responseData?.data.length} resultado(s) encontrado(s).</p>
         )}
       </div>
       {responseData?.data.map(
