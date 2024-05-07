@@ -14,6 +14,12 @@ const IndexPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      if (name.trim() === "" || name.length <= 2) {
+        setError(
+          "Nome válido e com mais de 2 letras é obrigatório para buscar."
+        );
+        return;
+      }
       setIsLoading(true);
       const response = await fetch(
         `/api/scrape?name=${encodeURIComponent(name)}`
@@ -51,8 +57,8 @@ const IndexPage: React.FC = () => {
         >
           {loading ? "CARREGANDO..." : "Encontrar"}
         </button>
+        {error && <div className="text-red-500">{error}</div>}
       </div>
-      {error && <div className="text-red-500">{error}</div>}
       {responseData?.data.map(
         (person: { [x: string]: string }[], __index: number) => {
           const mergedPerson = person.reduce((result, currentObject) => {
