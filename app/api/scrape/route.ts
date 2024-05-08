@@ -2,6 +2,8 @@ import { load, Element, CheerioAPI, Cheerio } from "cheerio";
 import { remove as removeDiacritics } from "diacritics";
 import fetch from "node-fetch";
 
+import logNameToTxt from "./logNameToTxt";
+
 const DRIVE_URL =
   "https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#";
 
@@ -72,7 +74,6 @@ export async function GET(req: Request) {
     const searchParams = new URL(req.url).searchParams;
     const nameRaw = searchParams.get("name") || "";
     const name = removeDiacritics(nameRaw.trim().toLowerCase());
-    console.log("name:", name);
 
     if (name === "") {
       return new Response(
@@ -82,6 +83,8 @@ export async function GET(req: Request) {
         }
       );
     }
+
+    await logNameToTxt(name);
 
     const response = await fetch(DRIVE_URL);
     const html = await response.text();
