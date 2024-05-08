@@ -34,6 +34,12 @@ const IndexPage: React.FC = () => {
     setError(null);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      fetchData();
+    }
+  };
+
   const fetchData = async () => {
     try {
       if (name.trim() === "" || name.length <= 2) {
@@ -84,6 +90,7 @@ const IndexPage: React.FC = () => {
           value={name}
           placeholder="Digite o nome da pessoa"
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           className="w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500"
         />
         <div className="flex gap-4 items-center">
