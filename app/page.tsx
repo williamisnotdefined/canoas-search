@@ -150,6 +150,15 @@ const IndexPage: React.FC = () => {
           >
             @encontrados.canoas
           </a>
+          . Os dados desse site só foram possíveis graças ao trabalho de{" "}
+          <a
+            href="https://www.instagram.com/tosalvocanoas/"
+            className="text-blue-700 hover:underline focus:outline-none focus:underline"
+            target="_blank"
+          >
+            @tosalvocanoas
+          </a>
+          .
         </p>
         <p className="text-xs italic">
           Fonte de dados: Esta aplicação tem como base de dados as planilhas do
