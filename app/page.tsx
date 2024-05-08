@@ -85,11 +85,11 @@ const IndexPage: React.FC = () => {
           className="w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500"
         />
         <button
-          className="max-w-36 grow-0 px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          className="flex w-fit px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
           onClick={fetchData}
           disabled={loading}
         >
-          {loading ? "CARREGANDO..." : "Encontrar"}
+          {loading ? "CARREGANDO..." : "Procurar"}
         </button>
         {error && <div className="text-red-500">{error}</div>}
         {responseData?.data.length >= 0 && (
@@ -115,7 +115,7 @@ const IndexPage: React.FC = () => {
               return (
                 <div
                   key={key + index}
-                  className="flex bg-gray-100 text-gray-600 uppercase font-semibold py-2"
+                  className="flex bg-gray-100 text-gray-600 uppercase font-medium py-2"
                 >
                   <div className="flex-1 px-4">{key}</div>
                   <div className="flex-1 px-4">
@@ -131,7 +131,7 @@ const IndexPage: React.FC = () => {
           return (
             <div className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto">
               <p className="m-auto w-full font-medium text-2xl">{tableId}</p>
-              <div key={__index} className="bg-white py-4 m-auto w-full">
+              <div key={__index} className="py-4 m-auto w-full">
                 <div className="flex flex-col">{attrs}</div>
               </div>
             </div>
