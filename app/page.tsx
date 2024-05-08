@@ -30,6 +30,9 @@ const IndexPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+    if (value !== name) {
+      setResponseData(null);
+    }
     setName(value);
     setError(null);
   };
