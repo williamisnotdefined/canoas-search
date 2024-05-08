@@ -176,7 +176,7 @@ const IndexPage: React.FC = () => {
       )}
 
       <div className="flex gap-2 flex-col max-w-[1000px] m-auto mt-4">
-        <p className="text-xs p-3 bg-neutral-200 text-gray-950 border-l-4 border-zinc-600 font-medium">
+        <p className="text-xs p-3 bg-neutral-300 text-gray-950 border-l-4 border-zinc-600 font-medium">
           Esse buscador pode ajudar pessoas, familias e amigos a se
           reencontrarem, por favor, compartilhe nos seus stories, marque os
           amigos, e ajude a divulgar:{" "}
