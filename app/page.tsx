@@ -67,7 +67,7 @@ const IndexPage: React.FC = () => {
           Buscador de Abrigados em Canoas
         </h1>
 
-        <p className="text-sm p-3 bg-yellow-200 text-yellow-800 border-l-4 border-yellow-800 font-medium">
+        <p className="rounded-sm text-sm p-3 bg-yellow-200/50 text-yellow-800 border-l-4 border-yellow-800 font-medium">
           Se você não achar pelo nome completo, tente pelo primeiro nome, ou
           nome e apenas um sobrenome e procure nos resultados filtrados. Os
           voluntários dos abrigos podem ter digitado de forma diferente, procure
