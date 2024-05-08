@@ -225,6 +225,18 @@ const IndexPage: React.FC = () => {
             [Tabela de abrigados prefeitura de canoas]
           </a>
         </p>
+        <p className="text-xs italic">
+          Nós somos 100% transparentes com os dados, e você pode ver o código
+          nesse link do github:{" "}
+          <a
+            href="https://github.com/williamisnotdefined/canoas-search/"
+            target="_blank"
+            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
+          >
+            [Código fonte]
+          </a>
+          . Colabore conosco, abre um pull request, ou entre em contato.
+        </p>
       </div>
     </div>
   );
