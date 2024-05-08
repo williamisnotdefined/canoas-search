@@ -10,7 +10,6 @@ function highlightSubstring(fullString: string, pattern: string) {
   if (!fullString.includes(pattern)) {
     return fullString;
   }
-  // Usamos expressão regular com a flag "i" para ignorar diferenciação de maiúsculas/minúsculas
 
   const splitted = fullString.split(pattern);
 
