@@ -29,7 +29,9 @@ const IndexPage: React.FC = () => {
   const [loading, setIsLoading] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    const { value } = e.target;
+    setName(value);
+    setError(null);
   };
 
   const fetchData = async () => {
@@ -40,6 +42,7 @@ const IndexPage: React.FC = () => {
         );
         return;
       }
+      setResponseData(null);
       setIsLoading(true);
       const response = await fetch(
         `/api/scrape?name=${encodeURIComponent(name)}`
@@ -83,16 +86,40 @@ const IndexPage: React.FC = () => {
           onChange={handleInputChange}
           className="w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500"
         />
-        <button
-          className="flex w-fit px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          onClick={fetchData}
-          disabled={loading}
-        >
-          {loading ? "CARREGANDO..." : "Procurar"}
-        </button>
+        <div className="flex gap-4 items-center">
+          <button
+            className="flex w-fit px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+            onClick={fetchData}
+            disabled={loading}
+          >
+            {loading ? "CARREGANDO..." : "Procurar"}
+          </button>
+          {loading && (
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-400"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          )}
+        </div>
         {error && <div className="text-red-500">{error}</div>}
         {responseData?.data.length >= 0 && (
-          <p>
+          <p className="mt-6 mb-4 px-4">
             {responseData?.data.length} resultado(s) encontrado(s).{" "}
             {responseData?.data.length === 0 && (
               <span className="font-bold">Não perca as experanças!</span>
@@ -142,7 +169,7 @@ const IndexPage: React.FC = () => {
         <p className="text-xs p-3 bg-neutral-200 text-gray-950 border-l-4 border-zinc-600 font-medium">
           Esse buscador pode ajudar pessoas, familias e amigos a se
           reencontrarem, por favor, compartilhe nos seus stories, marque os
-          amigos, e ajude a divulgar!{" "}
+          amigos, e ajude a divulgar:{" "}
           <a
             href="https://www.instagram.com/encontrados.canoas/"
             className="text-blue-700 hover:underline focus:outline-none focus:underline"
@@ -157,19 +184,35 @@ const IndexPage: React.FC = () => {
             target="_blank"
           >
             @tosalvocanoas
+          </a>{" "}
+          e a prefeitura de canoas (
+          <a
+            href="https://www.instagram.com/prefcanoas/"
+            className="text-blue-700 hover:underline focus:outline-none focus:underline"
+            target="_blank"
+          >
+            @prefcanoas
           </a>
-          .
+          ) .
         </p>
         <p className="text-xs italic">
           Fonte de dados: Esta aplicação tem como base de dados as planilhas do
-          google drive dos abrigados, criadas pelo tosalvocanoas, canoasmilgrau,
-          etc.{" "}
+          google drive dos abrigados, criadas pelo tosalvocanoas, canoasmilgrau
+          e outros:{" "}
           <a
             href="https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#"
             target="_blank"
             className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
           >
-            [Tabela de abrigados em Canoas]
+            [Tabela de abrigados @tosalvocanoas]
+          </a>
+          , assim como a planilha oficial da prefeitura de canoas:{" "}
+          <a
+            href="https://www.canoas.rs.gov.br/noticias/prefeitura-de-canoas-divulga-lista-de-resgatados-da-enchente-e-alojados-em-abrigos/"
+            target="_blank"
+            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
+          >
+            [Tabela de abrigados prefeitura de canoas]
           </a>
         </p>
       </div>

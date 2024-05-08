@@ -18,11 +18,17 @@
 
 body {
   color: black;
-  background:white;
+  background: white;
 }
 
-@layer utilities {  
+@layer utilities {
   input {
     @apply bg-white text-black border border-[#000];
+  }
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  .animation-delay-400 {
+    animation-delay: 0.4s;
   }
 }

@@ -109,7 +109,7 @@ export async function GET(req: Request) {
 
     return new Response(
       JSON.stringify({
-        data: [...dataToSalvo, ...dataPref],
+        data: [...dataPref, ...dataToSalvo],
       }),
       {
         status: 200,
