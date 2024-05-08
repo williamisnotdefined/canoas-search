@@ -226,8 +226,8 @@ const IndexPage: React.FC = () => {
           </a>
         </p>
         <p className="text-xs italic">
-          Nós somos 100% transparentes com os dados, e você pode ver o código
-          nesse link do github:{" "}
+          Nós somos 100% transparentes com os dados e com a integridade desse
+          site, você pode ver o código nesse link do github:{" "}
           <a
             href="https://github.com/williamisnotdefined/canoas-search/"
             target="_blank"
