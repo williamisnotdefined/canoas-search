@@ -81,7 +81,9 @@ const IndexPage: React.FC = () => {
         </p>
         <p className="text-sm font-medium">
           ** Se você não achar pelo nome completo, tente pelo primeiro nome, ou
-          nome e apenas um sobrenome e procure nos resultados filtrados.
+          nome e apenas um sobrenome e procure nos resultados filtrados. Os
+          voluntários dos abrigos podem ter digitado de forma diferente, procure
+          por algumas variações do nome. **
         </p>
 
         <p className="text-sm">
