@@ -4,8 +4,15 @@ import fetch from "node-fetch";
 
 import logNameToTxt from "./logNameToTxt";
 
-const DRIVE_URL =
+const DRIVE_URL_TO_SALVO =
   "https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#";
+const DRIVE_URL_PREF =
+  "https://docs.google.com/spreadsheets/d/1f5gofOOv4EFYWhVqwPWbgF2M-7uHrJrCMiP7Ug4y6lQ/htmlview#";
+
+enum Source {
+  TOSALVO = "@tosalvocanoas",
+  PREF = "prefeitura de canoas",
+}
 
 type Data = { [x: string]: string | null | undefined }[][];
 
@@ -20,7 +27,11 @@ const getTableHead = (
     .map((cell) => $(cell).text())[index];
 };
 
-function findRowsByText(html: string, searchText: string): Data {
+function findRowsByText(
+  html: string,
+  searchText: string,
+  source: Source
+): Data {
   const $ = load(html);
   const tables = $("table");
   let matchedRowHTML: {
@@ -43,13 +54,11 @@ function findRowsByText(html: string, searchText: string): Data {
             let cellText = $(cell).html();
 
             let includesBr = cellText?.includes("<br>");
-            if (includesBr) {
+            if (includesBr && source === Source.TOSALVO) {
               cellText = (cellText as string)
                 ?.split("<br>")
                 .filter((cell) =>
-                  removeDiacritics(cell)
-                    .toLocaleLowerCase()
-                    .includes(searchText)
+                  removeDiacritics(cell).toLowerCase().includes(searchText)
                 )
                 .join(", ");
             }
@@ -60,7 +69,11 @@ function findRowsByText(html: string, searchText: string): Data {
                 : $(cell).text() || " - ",
             };
           });
-        matchedRowHTML.push([...person, { id: buttonText }]);
+        matchedRowHTML.push([
+          ...person,
+          { id: buttonText },
+          { "lista de origem": source },
+        ]);
       }
     });
   });
@@ -86,16 +99,22 @@ export async function GET(req: Request) {
 
     await logNameToTxt(name);
 
-    const response = await fetch(DRIVE_URL);
-    const html = await response.text();
+    const responseToSalvo = await fetch(DRIVE_URL_TO_SALVO);
+    const htmlToSalvo = await responseToSalvo.text();
+    const dataToSalvo = findRowsByText(htmlToSalvo, name, Source.TOSALVO);
 
-    const data = findRowsByText(html, name);
+    const responsePref = await fetch(DRIVE_URL_PREF);
+    const htmlPref = await responsePref.text();
+    const dataPref = findRowsByText(htmlPref, name, Source.PREF);
 
-    const result = data;
-
-    return new Response(JSON.stringify({ data: result }), {
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({
+        data: [...dataToSalvo, ...dataPref],
+      }),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.error("Error during scraping:", error);
     return new Response(JSON.stringify({ data: "Erro no servidor" }), {
