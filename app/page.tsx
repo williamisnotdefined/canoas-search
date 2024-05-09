@@ -190,11 +190,11 @@ const IndexPage: React.FC = () => {
           reencontrarem, por favor, compartilhe nos seus stories, marque os
           amigos, e ajude a divulgar:{" "}
           <a
-            href="https://www.instagram.com/encontrados.canoas/"
+            href="https://www.instagram.com/tosalvocanoas/"
             className="text-blue-700 hover:underline focus:outline-none focus:underline"
             target="_blank"
           >
-            @encontrados.canoas
+            @tosalvocanoas
           </a>
           . Os dados desse site só foram possíveis graças ao trabalho de{" "}
           <a
