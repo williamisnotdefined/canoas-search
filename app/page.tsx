@@ -246,6 +246,21 @@ const IndexPage: React.FC = () => {
           </a>
           . Colabore conosco, abre um pull request, ou entre em contato.
         </p>
+        <p className="text-xs italic">
+          Com o intuito de não afogar o instagram da{" "}
+          <span className="font-medium">@tosalvocanoas</span> temos um canal
+          exclusivamente direcionado para suporte técnico do site, dúvidas
+          gerais ou de funcionalidades desse site, reporte de bugs ou sugestões:{" "}
+          <a
+            href="https://www.instagram.com/encontrados.canoas/"
+            target="_blank"
+            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
+          >
+            [@encontrados.canoas]
+          </a>
+          . Essa página não é direcionada a notícias ou doações, apenas para
+          assuntos direcionados a esse site de busca.
+        </p>
       </div>
     </div>
   );
