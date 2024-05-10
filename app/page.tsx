@@ -138,7 +138,8 @@ const IndexPage: React.FC = () => {
           {error && <div className="text-red-500">{error}</div>}
           {responseData?.data.length >= 0 && (
             <p className="mt-6 mb-4 px-4">
-              {responseData?.data.length} resultado(s) encontrado(s).{" "}
+              {responseData?.data.length} resultado(s) encontrado(s). Tente
+              procurar por outras variações deste nome.{" "}
               {responseData?.data.length === 0 && (
                 <span className="font-bold">Não perca as experanças!</span>
               )}
