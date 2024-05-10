@@ -4,6 +4,8 @@ import fetch from "node-fetch";
 
 import logNameToTxt from "./logNameToTxt";
 
+export const dynamic = 'force-dynamic';
+
 const DRIVE_URL_TO_SALVO =
   "https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#";
 const DRIVE_URL_PREF =
