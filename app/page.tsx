@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { remove as removeDiacritics } from "diacritics";
 
 function highlightSubstring(fullString: string, pattern: string) {
@@ -125,7 +125,7 @@ const IndexPage: React.FC = () => {
                   cy="12"
                   r="10"
                   stroke="currentColor"
-                  stroke-width="4"
+                  strokeWidth="4"
                 ></circle>
                 <path
                   className="opacity-75"
@@ -175,7 +175,7 @@ const IndexPage: React.FC = () => {
             });
 
           return (
-            <div className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto">
+            <div key={__index} className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto">
               <p className="m-auto w-full font-medium text-2xl">{tableId}</p>
               <div key={__index} className="py-4 m-auto w-full">
                 <div className="flex flex-col">{attrs}</div>

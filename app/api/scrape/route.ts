@@ -34,7 +34,7 @@ function findRowsByText(
 ): Data {
   const $ = load(html);
   const tables = $("table");
-  let matchedRowHTML: {
+  const matchedRowHTML: {
     [x: string]: string | null | undefined;
   }[][] = [];
 
@@ -53,7 +53,7 @@ function findRowsByText(
           .map((cell, index) => {
             let cellText = $(cell).html();
 
-            let includesBr = cellText?.includes("<br>");
+            const includesBr = cellText?.includes("<br>");
             if (includesBr && source === Source.TOSALVO) {
               cellText = (cellText as string)
                 ?.split("<br>")
