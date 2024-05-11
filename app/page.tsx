@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { remove as removeDiacritics } from "diacritics";
 import React, { useState } from "react";
 
@@ -48,14 +49,14 @@ const IndexPage: React.FC = () => {
     try {
       if (name.trim() === "" || name.length <= 2) {
         setError(
-          "Nome válido e com mais de 2 letras é obrigatório para buscar.",
+          "Nome válido e com mais de 2 letras é obrigatório para buscar."
         );
         return;
       }
       setResponseData(null);
       setIsLoading(true);
       const response = await fetch(
-        `/api/scrape?name=${encodeURIComponent(name)}`,
+        `/api/scrape?name=${encodeURIComponent(name)}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -66,7 +67,7 @@ const IndexPage: React.FC = () => {
       setError(null);
     } catch (error) {
       setError(
-        "Tente novamente em breve, ou contate os administradores. (@tosalvocanoas)",
+        "Tente novamente em breve, ou contate os administradores. (@tosalvocanoas)"
       );
       setIsLoading(false);
       console.error("Error fetching data:", error);
@@ -82,11 +83,18 @@ const IndexPage: React.FC = () => {
         }}
       >
         <div className="flex gap-2 flex-col max-w-[1000px] m-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">
+          <h1 className="flex items-center gap-4 text-4xl font-bold text-gray-900 mb-2">
+            <Image
+              alt="tosalvocanoas"
+              src="/logo.png"
+              width={100}
+              height={100}
+              className="rounded-full"
+            />
             Buscador de Abrigados em Canoas
           </h1>
 
-          <p className="rounded-sm text-sm p-3 bg-yellow-200/50 text-yellow-800 border-l-4 border-yellow-800 font-medium">
+          <p className="mb-6 rounded-sm text-sm p-3 bg-yellow-200/50 text-yellow-800 border-l-4 border-yellow-800 font-medium">
             Se você não achar pelo nome completo, tente pelo primeiro nome, ou
             nome e apenas um sobrenome e procure nos resultados filtrados. Os
             voluntários dos abrigos podem ter digitado de forma diferente,
@@ -167,7 +175,7 @@ const IndexPage: React.FC = () => {
                   <div className="flex-1 px-4">
                     {highlightSubstring(
                       mergedPerson[key].toLowerCase(),
-                      name.toLowerCase(),
+                      name.toLowerCase()
                     )}
                   </div>
                 </div>
@@ -185,10 +193,10 @@ const IndexPage: React.FC = () => {
               </div>
             </div>
           );
-        },
+        }
       )}
 
-      <div className="flex gap-2 flex-col max-w-[1000px] m-auto mt-4">
+      <div className="flex gap-2 flex-col max-w-[1000px] m-auto mt-16">
         <p className="text-xs p-3 bg-neutral-300 text-gray-950 border-l-4 border-zinc-600 font-medium">
           Esse buscador pode ajudar pessoas, familias e amigos a se
           reencontrarem, por favor, compartilhe nos seus stories, marque os
