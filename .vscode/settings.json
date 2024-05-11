@@ -15,17 +15,8 @@
   "explorer.compactFolders": false,
   "javascript.format.enable": false,
   "typescript.format.enable": false,
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "cSpell.words": [
-    "embla",
-    "energic",
-    "Popuptip"
-  ]
 }

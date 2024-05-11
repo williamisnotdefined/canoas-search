@@ -37,3 +37,5 @@ next-env.d.ts
 
 # logs
 name_log.txt
+error_log.txt
+request_time_log.txt

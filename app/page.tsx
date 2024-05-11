@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import { remove as removeDiacritics } from "diacritics";
+import React, { useState } from "react";
 
 function highlightSubstring(fullString: string, pattern: string) {
   fullString = removeDiacritics(fullString);
@@ -48,14 +48,14 @@ const IndexPage: React.FC = () => {
     try {
       if (name.trim() === "" || name.length <= 2) {
         setError(
-          "Nome válido e com mais de 2 letras é obrigatório para buscar."
+          "Nome válido e com mais de 2 letras é obrigatório para buscar.",
         );
         return;
       }
       setResponseData(null);
       setIsLoading(true);
       const response = await fetch(
-        `/api/scrape?name=${encodeURIComponent(name)}`
+        `/api/scrape?name=${encodeURIComponent(name)}`,
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -66,7 +66,7 @@ const IndexPage: React.FC = () => {
       setError(null);
     } catch (error) {
       setError(
-        "Tente novamente em breve, ou contate os administradores. (@tosalvocanoas)"
+        "Tente novamente em breve, ou contate os administradores. (@tosalvocanoas)",
       );
       setIsLoading(false);
       console.error("Error fetching data:", error);
@@ -167,7 +167,7 @@ const IndexPage: React.FC = () => {
                   <div className="flex-1 px-4">
                     {highlightSubstring(
                       mergedPerson[key].toLowerCase(),
-                      name.toLowerCase()
+                      name.toLowerCase(),
                     )}
                   </div>
                 </div>
@@ -175,14 +175,17 @@ const IndexPage: React.FC = () => {
             });
 
           return (
-            <div key={__index} className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto">
+            <div
+              key={__index}
+              className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto"
+            >
               <p className="m-auto w-full font-medium text-2xl">{tableId}</p>
               <div key={__index} className="py-4 m-auto w-full">
                 <div className="flex flex-col">{attrs}</div>
               </div>
             </div>
           );
-        }
+        },
       )}
 
       <div className="flex gap-2 flex-col max-w-[1000px] m-auto mt-4">
