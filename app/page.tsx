@@ -240,9 +240,8 @@ const IndexPage: React.FC = () => {
           ) .
         </p>
         <p className="text-xs italic">
-          Fonte de dados: Esta aplicação tem como base de dados as planilhas do
-          google drive dos abrigados, criadas pelo tosalvocanoas, canoasmilgrau
-          e outros:{" "}
+          Fonte de dados: Esta aplicação tem como base de dados as planilhas de
+          abrigados, criada pelo tosalvocanoas:{" "}
           <a
             href="https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#"
             target="_blank"
