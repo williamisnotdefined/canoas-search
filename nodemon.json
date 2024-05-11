@@ -1,0 +1,6 @@
+{
+  "watch": ["./cronTasks.ts"],
+  "ext": "ts",
+  "exec": "tsx ./cronTasks.ts",
+  "delay": "2.5"
+}

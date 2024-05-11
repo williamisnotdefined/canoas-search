@@ -1,8 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { remove as removeDiacritics } from "diacritics";
+import Image from "next/image";
 import React, { useState } from "react";
+
+import { Source } from "@/tasks/scrape/core/sources";
 
 function highlightSubstring(fullString: string, pattern: string) {
   fullString = removeDiacritics(fullString);
@@ -49,14 +51,14 @@ const IndexPage: React.FC = () => {
     try {
       if (name.trim() === "" || name.length <= 2) {
         setError(
-          "Nome válido e com mais de 2 letras é obrigatório para buscar."
+          "Nome válido e com mais de 2 letras é obrigatório para buscar.",
         );
         return;
       }
       setResponseData(null);
       setIsLoading(true);
       const response = await fetch(
-        `/api/scrape?name=${encodeURIComponent(name)}`
+        `/api/scrape?name=${encodeURIComponent(name)}`,
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -67,7 +69,7 @@ const IndexPage: React.FC = () => {
       setError(null);
     } catch (error) {
       setError(
-        "Tente novamente em breve, ou contate os administradores. (@tosalvocanoas)"
+        "Tente novamente em breve, ou contate os administradores. (@tosalvocanoas)",
       );
       setIsLoading(false);
       console.error("Error fetching data:", error);
@@ -144,13 +146,20 @@ const IndexPage: React.FC = () => {
             )}
           </div>
           {error && <div className="text-red-500">{error}</div>}
-          {responseData?.data.length >= 0 && (
+          {responseData?.data.length > 0 && (
             <p className="mt-6 mb-4 px-4">
-              {responseData?.data.length} resultado(s) encontrado(s). Tente
-              procurar por outras variações deste nome.{" "}
-              {responseData?.data.length === 0 && (
-                <span className="font-bold">Não perca as experanças!</span>
-              )}
+              {responseData?.data.length} resultado(s) encontrado(s) de{" "}
+              {new Intl.NumberFormat("pt-BR").format(
+                responseData?.registersCount,
+              )}{" "}
+              registros em nossa base.
+            </p>
+          )}
+          {responseData?.data.length === 0 && (
+            <p className="mt-6 mb-4 px-4">
+              0 resultados encontrados. Tente procurar por outras variações
+              deste nome.{" "}
+              <span className="font-bold">Não perca as experanças!</span>
             </p>
           )}
         </div>
@@ -161,7 +170,7 @@ const IndexPage: React.FC = () => {
             return { ...result, ...currentObject };
           }, {});
 
-          const tableId = mergedPerson.id;
+          const tableName = mergedPerson.id;
 
           const attrs = Object.keys(mergedPerson)
             .filter((key) => key !== "id")
@@ -175,7 +184,7 @@ const IndexPage: React.FC = () => {
                   <div className="flex-1 px-4">
                     {highlightSubstring(
                       mergedPerson[key].toLowerCase(),
-                      name.toLowerCase()
+                      name.toLowerCase(),
                     )}
                   </div>
                 </div>
@@ -187,13 +196,17 @@ const IndexPage: React.FC = () => {
               key={__index}
               className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto"
             >
-              <p className="m-auto w-full font-medium text-2xl">{tableId}</p>
+              {mergedPerson["lista de origem"] === Source.TOSALVOCANOAS && (
+                <p className="m-auto w-full font-medium text-2xl">
+                  {tableName}
+                </p>
+              )}
               <div key={__index} className="py-4 m-auto w-full">
                 <div className="flex flex-col">{attrs}</div>
               </div>
             </div>
           );
-        }
+        },
       )}
 
       <div className="flex gap-2 flex-col max-w-[1000px] m-auto mt-16">

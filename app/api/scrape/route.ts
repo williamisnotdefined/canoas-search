@@ -1,16 +1,22 @@
 import { remove as removeDiacritics } from "diacritics";
-import fetch from "node-fetch";
+import { promises as fs } from "fs";
 
-import { Source } from "./@types";
-import findNameInHtmlTable from "./htmlToData";
-import { logError, logName, logDuration } from "./logger";
+import { logError, logName, logDuration } from "@/logger";
+import { type Data } from "@/tasks/scrape/core/sources";
 
 export const dynamic = "force-dynamic";
 
-const DRIVE_URL_TO_SALVO =
-  "https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#";
-const DRIVE_URL_PREF =
-  "https://docs.google.com/spreadsheets/d/1f5gofOOv4EFYWhVqwPWbgF2M-7uHrJrCMiP7Ug4y6lQ/htmlview#";
+function filterByValue(data: Data, name: string): Data {
+  return data.filter((innerArray) =>
+    innerArray.some((object) =>
+      Object.values(object).some((value) =>
+        removeDiacritics(value || "")
+          .toLowerCase()
+          .includes(name),
+      ),
+    ),
+  );
+}
 
 export async function GET(req: Request) {
   const start = Date.now();
@@ -18,7 +24,9 @@ export async function GET(req: Request) {
   try {
     const searchParams = new URL(req.url).searchParams;
     const nameRaw = searchParams.get("name") || "";
-    const name = removeDiacritics(nameRaw.trim().toLowerCase());
+    const name = removeDiacritics(
+      nameRaw.trim().replace(/  +/g, " ").toLowerCase(),
+    );
 
     if (name === "") {
       return new Response(
@@ -31,19 +39,26 @@ export async function GET(req: Request) {
 
     await logName(name);
 
-    const responseToSalvo = await fetch(DRIVE_URL_TO_SALVO);
-    const htmlToSalvo = await responseToSalvo.text();
-    const dataToSalvo = findNameInHtmlTable(htmlToSalvo, name, Source.TOSALVO);
+    const tosalvoRaw = await fs.readFile("./public/tosalvocanoas.json", "utf8");
+    const tosalvoData = JSON.parse(tosalvoRaw) as Data;
 
-    const responsePref = await fetch(DRIVE_URL_PREF);
-    const htmlPref = await responsePref.text();
-    const dataPref = findNameInHtmlTable(htmlPref, name, Source.PREF);
+    const prefeituraRaw = await fs.readFile(
+      "./public/prefeituracanoas.json",
+      "utf8",
+    );
+    const prefeituraData = JSON.parse(prefeituraRaw) as Data;
+
+    const dataMerged = [...prefeituraData, ...tosalvoData];
+    const registersCount = dataMerged.length;
+
+    const data = filterByValue(dataMerged, name);
 
     await logDuration(`[SUCCESS] Request processed in ${Date.now() - start}ms`);
 
     return new Response(
       JSON.stringify({
-        data: [...dataPref, ...dataToSalvo],
+        data,
+        registersCount,
       }),
       {
         status: 200,
