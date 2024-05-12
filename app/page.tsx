@@ -1,9 +1,16 @@
 "use client";
 
 import { remove as removeDiacritics } from "diacritics";
+import { AlertTriangle } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import Loader from "@/components/Loader";
+import SearchInfos from "@/components/SearchInfos";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Source } from "@/tasks/scrape/core/sources";
 
 function highlightSubstring(fullString: string, pattern: string) {
@@ -19,7 +26,9 @@ function highlightSubstring(fullString: string, pattern: string) {
   return (
     <>
       <span>{splitted[0]}</span>
-      <span className="font-bold text-gray-800 bg-yellow-300">{pattern}</span>
+      <span className="font-bold dark:bg-destructive bg-yellow-300">
+        {pattern}
+      </span>
       <span>{splitted[1]}</span>
     </>
   );
@@ -85,207 +94,101 @@ const IndexPage: React.FC = () => {
         }}
       >
         <div className="flex gap-2 flex-col max-w-[1000px] m-auto">
-          <h1 className="flex items-center gap-4 text-4xl font-bold text-gray-900 mb-2">
-            <Image
-              alt="tosalvocanoas"
-              src="/logo.png"
-              width={100}
-              height={100}
-              className="rounded-full"
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Atenção!</AlertTitle>
+            <AlertDescription>
+              Se você não achar pelo nome completo, tente pelo primeiro nome, ou
+              nome e apenas um sobrenome e procure nos resultados filtrados. Os
+              voluntários dos abrigos podem ter digitado de forma diferente,
+              procure por algumas variações do nome.
+            </AlertDescription>
+          </Alert>
+
+          <div className="py-4">
+            <Label htmlFor="name">Busque pelo nome da pessoa</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              placeholder="Digite o nome da pessoa"
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              className="max-w-96"
             />
-            Buscador de Abrigados em Canoas
-          </h1>
 
-          <p className="mb-6 rounded-sm text-sm p-3 bg-yellow-200/50 text-yellow-800 border-l-4 border-yellow-800 font-medium">
-            Se você não achar pelo nome completo, tente pelo primeiro nome, ou
-            nome e apenas um sobrenome e procure nos resultados filtrados. Os
-            voluntários dos abrigos podem ter digitado de forma diferente,
-            procure por algumas variações do nome.
-          </p>
-
-          <label htmlFor="name">Busque pelo nome da pessoa</label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            placeholder="Digite o nome da pessoa"
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            className="w-full px-3 py-2 rounded-md border-gray-300 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500"
-          />
-          <div className="flex gap-4 items-center">
-            <button
-              type="submit"
-              className="flex w-fit px-4 py-2 mt-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-              // onClick={fetchData}
-              disabled={loading}
-            >
-              {loading ? "CARREGANDO..." : "Procurar"}
-            </button>
-            {loading && (
-              <svg
-                className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-400"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            )}
+            <div className="flex gap-4 items-center mt-3">
+              <Button type="submit" disabled={loading}>
+                {loading ? "Carregando..." : "Procurar"}
+              </Button>
+              {loading && <Loader />}
+              {error && <div className="text-sm text-destructive">{error}</div>}
+            </div>
           </div>
-          {error && <div className="text-red-500">{error}</div>}
-          {responseData?.data.length > 0 && (
-            <p className="mt-6 mb-4 px-4">
-              {responseData?.data.length} resultado(s) encontrado(s) de{" "}
-              {new Intl.NumberFormat("pt-BR").format(
-                responseData?.registersCount,
-              )}{" "}
-              registros em nossa base.
-            </p>
-          )}
-          {responseData?.data.length === 0 && (
-            <p className="mt-6 mb-4 px-4">
-              0 resultados encontrados. Tente procurar por outras variações
-              deste nome.{" "}
-              <span className="font-bold">Não perca as experanças!</span>
-            </p>
-          )}
         </div>
       </form>
-      {responseData?.data.map(
-        (person: { [x: string]: string }[], __index: number) => {
-          const mergedPerson = person.reduce((result, currentObject) => {
-            return { ...result, ...currentObject };
-          }, {});
 
-          const tableName = mergedPerson.id;
+      <div className="flex flex-col gap-4 max-w-[1000px] m-auto mt-4">
+        {responseData?.data.length >= 0 && (
+          <p>
+            {responseData?.data.length} resultado(s) encontrado(s) de{" "}
+            {new Intl.NumberFormat("pt-BR").format(
+              responseData?.registersCount,
+            )}{" "}
+            registros em nossa base.
+            {responseData?.data.length === 0 && (
+              <p>
+                Tente procurar por outras variações deste nome.{" "}
+                <span className="font-bold">Não perca as experanças!</span>
+              </p>
+            )}
+          </p>
+        )}
 
-          const attrs = Object.keys(mergedPerson)
-            .filter((key) => key !== "id")
-            .map((key, index) => {
-              return (
-                <div
-                  key={key + index}
-                  className="flex bg-gray-100 text-gray-600 uppercase font-medium py-2"
-                >
-                  <div className="flex-1 px-4">{key}</div>
-                  <div className="flex-1 px-4">
-                    {highlightSubstring(
-                      mergedPerson[key].toLowerCase(),
-                      name.toLowerCase(),
-                    )}
+        {responseData?.data.map(
+          (person: { [x: string]: string }[], __index: number) => {
+            const mergedPerson = person.reduce((result, currentObject) => {
+              return { ...result, ...currentObject };
+            }, {});
+
+            const tableName = mergedPerson.id;
+
+            const attrs = Object.keys(mergedPerson)
+              .filter((key) => key !== "id")
+              .map((key, index) => {
+                return (
+                  <div
+                    key={key + index}
+                    className="flex bg-accent uppercase font-medium py-2"
+                  >
+                    <div className="flex-1 px-4">{key}</div>
+                    <div className="flex-1 px-4">
+                      {highlightSubstring(
+                        mergedPerson[key].toLowerCase(),
+                        name.toLowerCase(),
+                      )}
+                    </div>
                   </div>
+                );
+              });
+
+            return (
+              <div key={__index} className="flex flex-col">
+                {mergedPerson["lista de origem"] === Source.TOSALVOCANOAS && (
+                  <p className="m-auto w-full font-medium text-2xl">
+                    {tableName}
+                  </p>
+                )}
+                <div key={__index} className="m-auto w-full">
+                  <div className="flex flex-col">{attrs}</div>
                 </div>
-              );
-            });
-
-          return (
-            <div
-              key={__index}
-              className="flex flex-col grow-1 max-w-[1000px] w-full px-4 m-auto"
-            >
-              {mergedPerson["lista de origem"] === Source.TOSALVOCANOAS && (
-                <p className="m-auto w-full font-medium text-2xl">
-                  {tableName}
-                </p>
-              )}
-              <div key={__index} className="py-4 m-auto w-full">
-                <div className="flex flex-col">{attrs}</div>
               </div>
-            </div>
-          );
-        },
-      )}
-
-      <div className="flex gap-2 flex-col max-w-[1000px] m-auto mt-16">
-        <p className="text-xs p-3 bg-neutral-300 text-gray-950 border-l-4 border-zinc-600 font-medium">
-          Esse buscador pode ajudar pessoas, familias e amigos a se
-          reencontrarem, por favor, compartilhe nos seus stories, marque os
-          amigos, e ajude a divulgar:{" "}
-          <a
-            href="https://www.instagram.com/tosalvocanoas/"
-            className="text-blue-700 hover:underline focus:outline-none focus:underline"
-            target="_blank"
-          >
-            @tosalvocanoas
-          </a>
-          . Os dados desse site só foram possíveis graças ao trabalho de{" "}
-          <a
-            href="https://www.instagram.com/tosalvocanoas/"
-            className="text-blue-700 hover:underline focus:outline-none focus:underline"
-            target="_blank"
-          >
-            @tosalvocanoas
-          </a>{" "}
-          e a prefeitura de canoas (
-          <a
-            href="https://www.instagram.com/prefcanoas/"
-            className="text-blue-700 hover:underline focus:outline-none focus:underline"
-            target="_blank"
-          >
-            @prefcanoas
-          </a>
-          ) .
-        </p>
-        <p className="text-xs italic">
-          Fonte de dados: Esta aplicação tem como base de dados as planilhas de
-          abrigados, criada pelo tosalvocanoas:{" "}
-          <a
-            href="https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#"
-            target="_blank"
-            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
-          >
-            [Tabela de abrigados @tosalvocanoas]
-          </a>
-          , assim como a planilha oficial da prefeitura de canoas:{" "}
-          <a
-            href="https://www.canoas.rs.gov.br/noticias/prefeitura-de-canoas-divulga-lista-de-resgatados-da-enchente-e-alojados-em-abrigos/"
-            target="_blank"
-            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
-          >
-            [Tabela de abrigados prefeitura de canoas]
-          </a>
-        </p>
-        <p className="text-xs italic">
-          Nós somos 100% transparentes com os dados e com a integridade desse
-          site, você pode ver o código nesse link do github:{" "}
-          <a
-            href="https://github.com/williamisnotdefined/canoas-search/"
-            target="_blank"
-            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
-          >
-            [Código fonte]
-          </a>
-          . Colabore conosco, abre um pull request, ou entre em contato.
-        </p>
-        <p className="text-xs italic">
-          Com o intuito de não afogar o instagram da{" "}
-          <span className="font-medium">@tosalvocanoas</span> temos um canal
-          exclusivamente direcionado para suporte técnico do site, dúvidas
-          gerais ou de funcionalidades desse site, reporte de bugs ou sugestões:{" "}
-          <a
-            href="https://www.instagram.com/encontrados.canoas/"
-            target="_blank"
-            className="text-blue-500 hover:underline focus:outline-none focus:underline not-italic"
-          >
-            [@encontrados.canoas]
-          </a>
-          . Essa página não é direcionada a notícias ou doações, apenas para
-          assuntos direcionados a esse site de busca.
-        </p>
+            );
+          },
+        )}
       </div>
+
+      <SearchInfos />
     </div>
   );
 };

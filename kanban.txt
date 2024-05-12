@@ -1,0 +1,3 @@
+- RootLayout
+  Add generic title instead of the hardcoded "Buscador de Abrigados em Canoas"
+- 
