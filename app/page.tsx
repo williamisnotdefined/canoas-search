@@ -2,7 +2,6 @@
 
 import { remove as removeDiacritics } from "diacritics";
 import { AlertTriangle } from "lucide-react";
-import Image from "next/image";
 import React, { useState } from "react";
 
 import Loader from "@/components/Loader";
