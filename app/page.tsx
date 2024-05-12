@@ -12,6 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Source } from "@/tasks/scrape/core/sources";
 
+const forbiddenColumnsHeader = [
+  "OS NOMES DUPLICADOS SÃO RESULTADO DE DUPLICAÇÃO DA INFORMAÇÃO DO MOMENTO DO REGISTRO E LOCALIZAÇÃO. PREFERIMOS DUPLICAR PARA GARANTIR QUE ALGUMA INFORMAÇÃO POSSA CONTRIBUIR PARA A LOCALIZAÇÃO DOS ABRIGADOS",
+];
+
 function highlightSubstring(fullString: string, pattern: string) {
   fullString = removeDiacritics(fullString);
   pattern = removeDiacritics(pattern);
@@ -155,17 +159,26 @@ const IndexPage: React.FC = () => {
             const attrs = Object.keys(mergedPerson)
               .filter((key) => key !== "id")
               .map((key, index) => {
+                const isForbiddenColumnHead = forbiddenColumnsHeader.some(
+                  (forbiddenHead) =>
+                    key.toLowerCase().includes(forbiddenHead.toLowerCase()),
+                );
+
+                const value = mergedPerson[key].toLowerCase().trim();
+                if (key === "-" && value === "-") {
+                  return null;
+                }
+
                 return (
                   <div
                     key={key + index}
                     className="flex bg-accent uppercase font-medium py-2"
                   >
-                    <div className="flex-1 px-4">{key}</div>
                     <div className="flex-1 px-4">
-                      {highlightSubstring(
-                        mergedPerson[key].toLowerCase(),
-                        name.toLowerCase(),
-                      )}
+                      {isForbiddenColumnHead ? "-" : key}
+                    </div>
+                    <div className="flex-1 px-4">
+                      {highlightSubstring(value, name.toLowerCase())}
                     </div>
                   </div>
                 );
