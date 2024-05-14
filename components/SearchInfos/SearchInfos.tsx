@@ -52,7 +52,7 @@ const SearchInfos: React.FC = () => {
         <AlertDescription>
           <div className="flex flex-col gap-1">
             <p className="text-xs">
-              Fonte de dados: Esta aplicação tem como base de dados as planilhas
+              Fonte de dados: Este buscador tem como base de dados as planilhas
               de abrigados, criada pelo tosalvocanoas:{" "}
               <a
                 href="https://docs.google.com/spreadsheets/d/1-1q4c8Ns6M9noCEhQqBE6gy3FWUv-VQgeUO9c7szGIM/htmlview#"

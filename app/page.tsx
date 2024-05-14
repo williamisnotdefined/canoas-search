@@ -4,6 +4,7 @@ import { remove as removeDiacritics } from "diacritics";
 import { AlertTriangle } from "lucide-react";
 import React, { useState } from "react";
 
+import HighlightNames from "@/components/HighlightNames";
 import Loader from "@/components/Loader";
 import SearchInfos from "@/components/SearchInfos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -15,27 +16,6 @@ import { Source } from "@/tasks/scrape/core/sources";
 const forbiddenColumnsHeader = [
   "OS NOMES DUPLICADOS SÃO RESULTADO DE DUPLICAÇÃO DA INFORMAÇÃO DO MOMENTO DO REGISTRO E LOCALIZAÇÃO. PREFERIMOS DUPLICAR PARA GARANTIR QUE ALGUMA INFORMAÇÃO POSSA CONTRIBUIR PARA A LOCALIZAÇÃO DOS ABRIGADOS",
 ];
-
-function highlightSubstring(fullString: string, pattern: string) {
-  fullString = removeDiacritics(fullString);
-  pattern = removeDiacritics(pattern);
-
-  if (!fullString.includes(pattern)) {
-    return fullString;
-  }
-
-  const splitted = fullString.split(pattern);
-
-  return (
-    <>
-      <span>{splitted[0]}</span>
-      <span className="font-bold dark:bg-destructive bg-yellow-300">
-        {pattern}
-      </span>
-      <span>{splitted[1]}</span>
-    </>
-  );
-}
 
 const IndexPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -108,7 +88,7 @@ const IndexPage: React.FC = () => {
             </AlertDescription>
           </Alert>
 
-          <div className="py-4">
+          <div className="mt-4">
             <Label htmlFor="name">Busque pelo nome da pessoa</Label>
             <Input
               id="name"
@@ -131,8 +111,8 @@ const IndexPage: React.FC = () => {
         </div>
       </form>
 
-      <div className="flex flex-col gap-4 max-w-[1000px] m-auto mt-4">
-        {responseData?.data.length >= 0 && (
+      {responseData?.data.length >= 0 && (
+        <div className="flex flex-col gap-4 max-w-[1000px] m-auto mt-4">
           <p>
             {responseData?.data.length} resultado(s) encontrado(s) de{" "}
             {new Intl.NumberFormat("pt-BR").format(
@@ -146,59 +126,81 @@ const IndexPage: React.FC = () => {
               </p>
             )}
           </p>
-        )}
 
-        {responseData?.data.map(
-          (person: { [x: string]: string }[], __index: number) => {
-            const mergedPerson = person.reduce((result, currentObject) => {
-              return { ...result, ...currentObject };
-            }, {});
+          {responseData?.data.map(
+            (person: { [x: string]: string }[], __index: number) => {
+              const mergedPerson = person.reduce(
+                (result, currentObject, index) => {
+                  const key = Object.keys(currentObject)[0];
+                  if (typeof result[key] !== "undefined") {
+                    return {
+                      ...result,
+                      [`duplicated-key::${key}::${index}`]: currentObject[key],
+                    };
+                  }
+                  return { ...result, ...currentObject };
+                },
+                {},
+              );
 
-            const tableName = mergedPerson.id;
+              const tableName = mergedPerson.id;
 
-            const attrs = Object.keys(mergedPerson)
-              .filter((key) => key !== "id")
-              .map((key, index) => {
-                const isForbiddenColumnHead = forbiddenColumnsHeader.some(
-                  (forbiddenHead) =>
-                    key.toLowerCase().includes(forbiddenHead.toLowerCase()),
-                );
+              const attrs = Object.keys(mergedPerson)
+                .filter((key) => key !== "id")
+                .map((_key, index) => {
+                  const isForbiddenColumnHead = forbiddenColumnsHeader.some(
+                    (forbiddenHead) =>
+                      _key.toLowerCase().includes(forbiddenHead.toLowerCase()),
+                  );
 
-                const value = mergedPerson[key].toLowerCase().trim();
-                if (key === "-" && value === "-") {
-                  return null;
-                }
+                  const key = isForbiddenColumnHead ? "-" : _key;
+                  const isDuplicatedKey = key.indexOf("duplicated-key::") === 0;
+                  const duplicatedKeyValue = key.split("::")[1] || "-";
+                  const normalizedKey = isDuplicatedKey
+                    ? duplicatedKeyValue
+                    : key || "-";
 
-                return (
-                  <div
-                    key={key + index}
-                    className="flex bg-accent uppercase font-medium py-2"
-                  >
-                    <div className="flex-1 px-4">
-                      {isForbiddenColumnHead ? "-" : key}
+                  const value = mergedPerson[_key].toLowerCase().trim();
+                  if (normalizedKey === "-" && value === "-") {
+                    return null;
+                  }
+
+                  return (
+                    <div
+                      key={key + index + value}
+                      className="flex bg-accent uppercase font-medium py-2"
+                    >
+                      <div className="flex-1 px-4">
+                        {isForbiddenColumnHead ? "-" : normalizedKey}
+                      </div>
+                      <div className="flex-1 px-4">
+                        {value !== "-" && (
+                          <HighlightNames
+                            fullName={value}
+                            highlightNames={name.toLowerCase()}
+                          />
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1 px-4">
-                      {highlightSubstring(value, name.toLowerCase())}
-                    </div>
+                  );
+                });
+
+              return (
+                <div key={__index} className="flex flex-col">
+                  {mergedPerson["lista de origem"] === Source.TOSALVOCANOAS && (
+                    <p className="m-auto w-full font-medium text-2xl">
+                      {tableName}
+                    </p>
+                  )}
+                  <div key={__index} className="m-auto w-full">
+                    <div className="flex flex-col">{attrs}</div>
                   </div>
-                );
-              });
-
-            return (
-              <div key={__index} className="flex flex-col">
-                {mergedPerson["lista de origem"] === Source.TOSALVOCANOAS && (
-                  <p className="m-auto w-full font-medium text-2xl">
-                    {tableName}
-                  </p>
-                )}
-                <div key={__index} className="m-auto w-full">
-                  <div className="flex flex-col">{attrs}</div>
                 </div>
-              </div>
-            );
-          },
-        )}
-      </div>
+              );
+            },
+          )}
+        </div>
+      )}
 
       <SearchInfos />
     </div>

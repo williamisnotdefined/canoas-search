@@ -33,19 +33,13 @@ export default function HTMLToData(html: string, source: Source): Data {
         .find("td")
         .toArray()
         .map((cell, index) => {
-          let cellText = $(cell).html();
+          const cellHTML = $(cell).html();
 
-          const includesBr = cellText?.includes("<br>");
-          const isToSalvoCanoasWithBr =
-            includesBr && source === Source.TOSALVOCANOAS;
-
-          if (isToSalvoCanoasWithBr) {
-            cellText = (cellText as string)?.split("<br>").join(", ");
-          }
+          const includesBr = cellHTML?.includes("<br>");
 
           return {
-            [`${getTableHead($, tableRows, index)}`]: isToSalvoCanoasWithBr
-              ? cellText
+            [`${getTableHead($, tableRows, index)}`]: includesBr
+              ? cellHTML
               : $(cell).text() || " - ",
           };
         });

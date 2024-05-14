@@ -1,3 +1,4 @@
 - RootLayout
   Add generic title instead of the hardcoded "Buscador de Abrigados em Canoas"
-- 
+- Hamburger + Modal as menu responsive
+- Loader component with theme colors

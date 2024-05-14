@@ -9,12 +9,40 @@ export const dynamic = "force-dynamic";
 function filterByValue(data: Data, name: string): Data {
   return data.filter((innerArray) =>
     innerArray.some((object) =>
-      Object.values(object).some((value) =>
-        removeDiacritics(value || "")
+      Object.values(object).some((value) => {
+        const strValue = removeDiacritics(value || "")
           .toLowerCase()
-          .includes(name),
-      ),
+          .trim();
+        if (strValue.includes(" ") && name.includes(" ")) {
+          return name.split(" ").every((word) => strValue.includes(word));
+        }
+
+        return strValue.includes(name);
+      }),
     ),
+  );
+}
+
+function fixBRTagsToSalvoJSON(data: Data, name: string) {
+  return data.map((innerArray) =>
+    innerArray.map((object) => {
+      return Object.keys(object).reduce((result, key) => {
+        const value = object[key];
+        // this case will only happen in tosalvocanoas.json
+        const hasBRTag = !!value?.toLowerCase()?.includes("<br>");
+
+        return {
+          ...result,
+          [key]: hasBRTag
+            ? value
+                ?.toLowerCase()
+                .split("<br>")
+                .filter((item) => item.includes(name))
+                .join("")
+            : value,
+        };
+      }, {});
+    }),
   );
 }
 
@@ -40,7 +68,8 @@ export async function GET(req: Request) {
     await logName(name);
 
     const tosalvoRaw = await fs.readFile("./public/tosalvocanoas.json", "utf8");
-    const tosalvoData = JSON.parse(tosalvoRaw) as Data;
+    const tosalvoDataRaw = JSON.parse(tosalvoRaw) as Data;
+    const tosalvoData = fixBRTagsToSalvoJSON(tosalvoDataRaw, name);
 
     const prefeituraRaw = await fs.readFile(
       "./public/prefeituracanoas.json",
