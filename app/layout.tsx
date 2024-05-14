@@ -5,6 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 import AllProviders from "@/components/AllProviders";
+import MenuMobile from "@/components/MenuMobile";
 import SideMenu from "@/components/SideMenu";
 
 import "./globals.css";
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={className}>
         <AllProviders>
+          <MenuMobile />
           <SideMenu />
           <div className="sm:pl-28 px-8 max-w-[1000px] m-auto">
             <h1 className="mt-6 mb-6 flex items-center gap-4 text-center text-3xl font-semibold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1]">
