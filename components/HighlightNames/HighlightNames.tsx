@@ -1,3 +1,5 @@
+import cls from "classnames";
+import { remove as removeDiacritics } from "diacritics";
 import React from "react";
 
 type HighlightNamesProps = {
@@ -6,56 +8,64 @@ type HighlightNamesProps = {
 };
 
 const HighlightNames: React.FC<HighlightNamesProps> = ({
-  fullName,
+  fullName: fullNameProp,
   highlightNames,
 }) => {
-  const highlightPatterns = highlightNames.split(" ");
+  const fullName = removeDiacritics(fullNameProp).toLowerCase().trim();
+  const highlightPatterns = removeDiacritics(highlightNames)
+    .toLowerCase()
+    .trim()
+    .split(" ");
+  const isThereFullMatch = highlightPatterns.every((namePart) =>
+    fullName.includes(namePart),
+  );
 
-  const getHighlightedNameParts = () => {
-    const words = fullName.split(" ");
-    const nameElements: React.ReactElement[] = [];
+  if (!isThereFullMatch) {
+    return <span>{fullName}</span>;
+  }
 
-    words.forEach((name, index) => {
-      const nameLower = name.toLowerCase();
-      let matched = false;
-      let startIdx = 0;
-      let endIdx = 0;
+  const matches = highlightPatterns
+    .map((partOfName) => {
+      const start = fullName.indexOf(partOfName);
+      return {
+        start,
+        end: Math.max(start, 0) + partOfName.length,
+        match: true,
+      };
+    })
+    .filter((match) => match.start >= 0);
 
-      for (const pattern of highlightPatterns) {
-        const patternLower = pattern.toLowerCase();
-        startIdx = nameLower.indexOf(patternLower);
+  const segments = [];
+  let lastIndex = 0;
 
-        if (startIdx !== -1) {
-          matched = true;
-          const matchLength = pattern.length;
-          endIdx = startIdx + matchLength;
-          break;
-        }
-      }
+  matches.forEach((match) => {
+    if (match.start > lastIndex) {
+      segments.push({ start: lastIndex, end: match.start, match: false });
+    }
+    segments.push(match);
+    lastIndex = match.end;
+  });
 
-      if (matched) {
-        nameElements.push(
-          <React.Fragment key={index}>
-            {startIdx > 0 && <span>{name.slice(0, startIdx)}</span>}
-            <span className="font-bold dark:bg-destructive bg-yellow-300">
-              {name.slice(startIdx, endIdx)}
-            </span>
-            {endIdx < name.length && <span>{name.slice(endIdx)}</span>}
-          </React.Fragment>,
-        );
-      } else {
-        nameElements.push(<span key={index}>{name}</span>);
-      }
+  if (lastIndex < fullName.length) {
+    segments.push({ start: lastIndex, end: fullName.length, match: false });
+  }
 
-      if (index < words.length - 1) {
-        nameElements.push(<span key={"space" + index}> </span>);
-      }
-    });
+  console.log(segments, fullNameProp);
 
-    return <div>{nameElements}</div>;
-  };
-
-  return getHighlightedNameParts();
+  return (
+    <>
+      {segments.map((segment, index) => (
+        <span
+          key={index}
+          className={cls({
+            "font-bold dark:bg-destructive bg-yellow-300": segment.match,
+          })}
+        >
+          {fullNameProp.slice(segment.start, segment.end)}
+        </span>
+      ))}
+    </>
+  );
 };
 
 export default HighlightNames;

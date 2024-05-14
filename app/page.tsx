@@ -1,6 +1,5 @@
 "use client";
 
-import { remove as removeDiacritics } from "diacritics";
 import { AlertTriangle } from "lucide-react";
 import React, { useState } from "react";
 
@@ -177,7 +176,7 @@ const IndexPage: React.FC = () => {
                         {value !== "-" && (
                           <HighlightNames
                             fullName={value}
-                            highlightNames={name.toLowerCase()}
+                            highlightNames={name}
                           />
                         )}
                       </div>
