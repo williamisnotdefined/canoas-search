@@ -9,7 +9,9 @@ const task = async () => {
     const res = await fetch(DRIVE_URL.PREFEITURA_CANOAS);
     const html = await res.text();
     const data = HTMLToData(html, Source.PREFEITURA_CANOAS);
-    await dataToJSON("prefeituracanoas", data);
+    if (data.length > 0) {
+      await dataToJSON("prefeituracanoas", data);
+    }
   } catch (error) {
     console.error("Error in task", error);
     logTaskError(`Error in task PREFEITURA_CANOAS: ${error}`);
