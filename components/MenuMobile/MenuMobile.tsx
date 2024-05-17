@@ -104,9 +104,18 @@ const MenuMobile: React.FC = () => {
           </SheetContent>
         </Sheet>
 
-        <p className="text-lg font-medium flex-1 grow-1 text-center">
-          Tô Salvo Canoas
-        </p>
+        <div className="flex items-center gap-4 m-auto">
+          <Image
+            alt="tosalvocanoas"
+            src="/logo.png"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <p className="text-lg font-medium flex-1 grow-1 text-center">
+            Tô Salvo Canoas
+          </p>
+        </div>
       </header>
     </div>
   );
