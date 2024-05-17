@@ -36,7 +36,7 @@ export default function RootLayout({
           <MenuMobile />
           <SideMenu />
           <div className="sm:pl-28 px-8 max-w-[1000px] m-auto">
-            <h1 className="mt-6 mb-6 flex items-center gap-4 text-center text-3xl font-semibold leading-tight tracking-tighter md:text-4xl lg:leading-[1.1]">
+            <h1 className="my-6 flex items-center gap-4 text-3xl font-semibold">
               <Image
                 alt="tosalvocanoas"
                 src="/logo.png"
@@ -44,7 +44,7 @@ export default function RootLayout({
                 height={100}
                 className="rounded-full"
               />
-              Buscador de Abrigados em Canoas
+              Tô Salvo Canoas
             </h1>
             {children}
           </div>

@@ -96,7 +96,7 @@ const IndexPage: React.FC = () => {
               placeholder="Digite o nome da pessoa"
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              className="max-w-96"
+              className="max-w-96 mt-2"
             />
 
             <div className="flex gap-4 items-center mt-3">

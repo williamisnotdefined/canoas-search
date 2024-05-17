@@ -1,3 +1,8 @@
 - RootLayout
   Add generic title instead of the hardcoded "Buscador de Abrigados em Canoas"
 - Loader component with theme colors
+
+- Integration of Tanstack React Query with custom hooks
+- Implementation of form validations using Zod
+- Implementation of Husky for commit hooks
+- Addition of a video page (?)

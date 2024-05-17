@@ -54,12 +54,7 @@ For the application to function properly, certain tasks need to run periodically
 
 Our development roadmap includes a variety of exciting features and enhancements:
 
-- Integration of Tanstack React Query with custom hooks
-- Implementation of forms validation using Zod
-- Development of a hamburger menu for the frontend
-  - Addition of a video page
-- Creation of custom SHADCN components
-- Organization of components into a dedicated folder
-- Implementation of Husky for commit hooks
+- Login (Google) + Roles
+- CRUD Cleaning form
 
 This documentation is designed to get you started and familiar with our project's structure and setup. For more detailed information or support, please refer to our contributing guidelines or contact the development team directly.
