@@ -5,6 +5,8 @@ import { type Data } from "@/tasks/scrape/core/sources";
 
 import fromLogToNameArray from "./fromLogToNameArray";
 
+export const dynamic = "force-dynamic";
+
 function getDataByName(data: Data, name: string): Data {
   return data.filter((innerArray) =>
     innerArray.some((object) =>
